@@ -8,56 +8,78 @@ class Animal{
 public:
     Animal(){}
     virtual void makeSound(){}
-    ~Animal(){}
+    virtual ~Animal(){}
 };
 
 class Dog: public Animal{
 public:
-    Dog(string s):Sound(s){}
+    Dog(){}
     void makeSound(){
-        cout<<"Dog: "<<Sound<<endl;
+        cout<<"Dog: grrrrrrrr!"<<endl;
     }
-private:
-    string Sound;
 };
 
 class Cat: public Animal{
 public:
-    Cat(string s):Sound(s){}
+    Cat(){}
     void makeSound(){
-        cout<<"Cat: "<<Sound<<endl;
+        cout<<"Cat: miyaooo~"<<endl;
     }
-private:
-    string Sound;
 };
 
 class Cow: public Animal{
 public:
-    Cow(string s):Sound(s){}
+    Cow(){}
     void makeSound(){
-        cout<<"Cow: "<<Sound<<endl;
+        cout<<"Cow: moo~~"<<endl;
     }
-private:
-    string Sound;
 };
 
 void print(Animal *animal){
     animal->makeSound();
 }
 
-int main(){
-    Animal * animal[3];
-
-    Dog dog("grrrrrrr!");
-    Cat cat("miyaoooooo~");
-    Cow cow("moo~");
-
-    animal[0]=&dog;
-    animal[1]=&cat;
-    animal[2]=&cow;
-
-    for(int i=0;i<3;i++){
-        print(animal[i]);
+class Zoo{
+private:
+    Animal *animals[10];
+    int animalCount=0;
+public:
+    void addAnimal(Animal* animal){
+        animals[animalCount]=animal;
+        animalCount+=1;
     }
+    void performActions(){
+        for(int i=0;i<animalCount;i++){
+            print(animals[i]);
+        }
+    }
+    ~Zoo(){
+        for(int i=0;i<animalCount;i++){
+           delete animals[i];
+        }
+    }
+};
+
+Animal* createRandomAnimal(){
+    Animal* animal;
+    int randomNum=rand()%3; //create 0~2 number
+
+    if(randomNum==0){
+        animal=new Dog();
+    }else if(randomNum==1){
+        animal=new Cat();
+    }else{
+        animal=new Cow();
+    }
+    return animal;
+}
+
+int main(){
+    srand(time(0)); //reset current time
+    Zoo zoo;
+    for(int i=0;i<10;i++){
+        zoo.addAnimal(createRandomAnimal());
+    }
+    zoo.performActions();
     return 0;
 }
